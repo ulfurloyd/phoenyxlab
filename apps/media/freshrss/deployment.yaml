@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: freshrss
-          image: freshrss/freshrss:1.29.1
+          image: freshrss/freshrss:1.30.0
           env:
             - name: TZ
               value: "Asia/Kolkata"
