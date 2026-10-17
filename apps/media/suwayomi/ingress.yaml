@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: suwayomi
+  namespace: media
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - suwayomi.phoenyxlab.xyz
+  rules:
+    - host: suwayomi.phoenyxlab.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: suwayomi
+                port:
+                  number: 4567
