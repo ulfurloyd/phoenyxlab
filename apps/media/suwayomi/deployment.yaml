@@ -46,6 +46,21 @@ spec:
               mountPath: /home/suwayomi/.local/share/Tachidesk
             - name: manga
               mountPath: /home/suwayomi/.local/share/Tachidesk/downloads
+      initContainers:
+        - name: flaresolverr
+          image: ghcr.io/flaresolverr/flaresolverr:v3.5.2
+          restartPolicy: Always
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: LOG_HTML
+              value: "false"
+            - name: CAPTCHA_SOLVER
+              value: "none"
+            - name: TZ
+              value: Asia/Kolkata
+          ports:
+            - containerPort: 8191
       volumes:
         - name: config
           persistentVolumeClaim:
