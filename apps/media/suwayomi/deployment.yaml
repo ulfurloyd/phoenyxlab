@@ -11,6 +11,8 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: suwayomi
