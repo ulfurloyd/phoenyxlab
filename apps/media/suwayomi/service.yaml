@@ -14,5 +14,5 @@ spec:
     app: suwayomi
   ports:
     - port: 4567
-      targetPort: http
+      targetPort: 4567
   type: ClusterIP
