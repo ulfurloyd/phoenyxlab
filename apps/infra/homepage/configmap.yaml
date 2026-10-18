@@ -75,7 +75,7 @@ data:
       Requests:
         tab: Media
         style: row
-        columns: 2
+        columns: 3
         header: false
         headerStyle: boxed
         useEqualHeights: true
@@ -416,6 +416,12 @@ data:
             icon: sh-droppedneedle
             namespace: media
             app: droppedneedle
+
+        - Suwayomi:
+            href: https://suwayomi.phoenyxlab.xyz
+            icon: sh-suwayomi
+            namespace: media
+            app: suwayomi
 
     - Downloads:
         - qBittorrent:
