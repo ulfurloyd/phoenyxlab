@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/part-of: phoenyxlab
     app.kubernetes.io/managed-by: kustomize
 spec:
-  replicas: 0
+  replicas: 1
   selector:
     matchLabels:
       app: notifiarr
@@ -24,39 +24,39 @@ spec:
         app.kubernetes.io/managed-by: kustomize
     spec:
       containers:
-      - name: notifiarr
-        image: golift/notifiarr:v0.9.7
-        env:
-          - name: TZ
-            value: "Asia/Kolkata"
-        ports:
-        - containerPort: 5454
-          name: notifiarr
-        resources:
-          requests:
-            memory: 256Mi
-            cpu: 100m
-          limits:
-            memory: 768Mi
-        livenessProbe:
-          tcpSocket:
-            port: 5454
-          initialDelaySeconds: 30
-          periodSeconds: 15
-        readinessProbe:
-          tcpSocket:
-            port: 5454
-          initialDelaySeconds: 10
-          periodSeconds: 10
-        volumeMounts:
-          - name: config
-            mountPath: /config
-          - name: utmp
-            mountPath: /var/run/utmp
-            readOnly: true
-          - name: machine-id
-            mountPath: /etc/machine-id
-            readOnly: true
+        - name: notifiarr
+          image: golift/notifiarr:v0.9.7
+          env:
+            - name: TZ
+              value: "Asia/Kolkata"
+          ports:
+            - containerPort: 5454
+              name: notifiarr
+          resources:
+            requests:
+              memory: 256Mi
+              cpu: 100m
+            limits:
+              memory: 768Mi
+          livenessProbe:
+            tcpSocket:
+              port: 5454
+            initialDelaySeconds: 30
+            periodSeconds: 15
+          readinessProbe:
+            tcpSocket:
+              port: 5454
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: utmp
+              mountPath: /var/run/utmp
+              readOnly: true
+            - name: machine-id
+              mountPath: /etc/machine-id
+              readOnly: true
       volumes:
         - name: config
           persistentVolumeClaim:
