@@ -4,9 +4,11 @@ metadata:
   name: infrastructure
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: platform-charts
   interval: 10m0s
   path: ./infrastructure
-  prune: true
+  prune: false
   decryption:
     provider: sops
     secretRef:
