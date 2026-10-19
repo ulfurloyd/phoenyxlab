@@ -8,7 +8,7 @@ spec:
     chart:
         spec:
             chart: kube-prometheus-stack
-            version: '92.10.1'
+            version: 92.10.1
             sourceRef:
                 kind: HelmRepository
                 name: prometheus-community
@@ -33,7 +33,7 @@ spec:
                     - name: "null"
                     - name: discord
                       discord_configs:
-                        - webhook_url: ENC[AES256_GCM,data:/vVUFqw5IXM43Yh/Yr49BLuAQkG2BmfnR34HLhH6321rKY0vSJ47xpWDHjhrghDpJdhCS1JmBpJ8jpGjDkTnxaeV50SLfgRQp36VoFIxqeEcUfxQbyTm32Mns5mmTPjM3P5qHn4otg+EE0+UoYz327J00oI3zzY85g==,iv:EoUutNr2S3PYiUUOMmNjeWQlkONYU20DGYlncGLxYJk=,tag:suWDjptjPG9wjHIyFCvV4Q==,type:str]
+                        - webhook_url: ENC[AES256_GCM,data:z07snhOxuBo8XabwEgvQIDtyaiRN8L2YVgi1yqiV+awgBvm9NRFAPdR2RANwpZazv9BNfzTDFpGuY44VmU03puNrA1/FZC3FfHYBVj26/0M5S79ulOTvOjky13tZoAAR55Sq7Vai9EC4xjoDSCvmD7FnTblLlYGUGg==,iv:OXfJR3RvqDI3nkMCXACc6BoOlNkdkQ6Mm2PBxf1EFYU=,tag:e+IZjMmArDL3GjhRm5OUjg==,type:str]
                           send_resolved: true
                           title: '[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }}'
                           message: |
@@ -59,16 +59,16 @@ spec:
                     - action: drop
                       regex: (etcd_request|apiserver_request_slo|apiserver_request_sli|apiserver_request)_duration_seconds_bucket;(0\.15|0\.2|0\.3|0\.35|0\.4|0\.45|0\.6|0\.7|0\.8|0\.9|1\.25|1\.5|1\.75|2|3|3\.5|4|4\.5|6|7|8|9|15|20|40|45|50)(\.0)?
                       sourceLabels:
-                          - __name__
-                          - le
+                        - __name__
+                        - le
                     - action: drop
                       regex: apiserver_(request_body_size_bytes_bucket|response_sizes_bucket|watch_list_duration_seconds_bucket|watch_cache_read_wait_seconds_bucket|watch_events_sizes_bucket|admission_controller_admission_duration_seconds_bucket)
                       sourceLabels:
-                          - __name__
+                        - __name__
                     - action: drop
                       regex: apiserver_flowcontrol_.*
                       sourceLabels:
-                          - __name__
+                        - __name__
         kubeStateMetrics:
             enabled: true
         kubelet:
@@ -77,10 +77,11 @@ spec:
         grafana:
             enabled: true
             adminUser: wolf
-            adminPassword: ENC[AES256_GCM,data:NVfu/i3GreruajM=,iv:9h8RNnyVoSrQPNK5eNpePRRpjTguAPEX/J6q2x6us2Y=,tag:vzaswOomH2ubJmX6AeUjIA==,type:str]
+            adminPassword: ENC[AES256_GCM,data:YgE2oRBh8yN5bVI=,iv:z2xkmc/n7o0yhWNR45GXdEgFYXITjk2huLOPOuY99Iw=,tag:KjMPmEnvVCxt7Ub8YgGUNQ==,type:str]
             persistence:
                 enabled: true
                 type: pvc
+                existingClaim: kube-prometheus-stack-grafana
                 size: 10Gi
                 accessModes:
                     - ReadWriteOnce
@@ -121,14 +122,14 @@ sops:
     age:
         - enc: |
             -----BEGIN AGE ENCRYPTED FILE-----
-            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSByTTJTRzRxOVNxbDRNNXVp
-            M2taLzc0TERlYjNYUWJQUEF0SUpMQmptM1FVCmtISEx0cDNMOTdadHBtM3JOb0l4
-            QUpaeDdZRC8rc1k1czlLSnRxOW1wK0UKLS0tIENyOHlQM0h0V013SlhGZnBNcHJG
-            NHRKYW1sMWppT0JrUWxlVVQzc2hBWm8KZL3ygSeAr2rZdRqSZV3Zmya5kSeMTEq7
-            aXYOqZ8dB0N3Sxwe3ulxUbMCF3AGh5yjExjrSx/Fb8FDHQWyGRjGzA==
+            YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSB3WkRlTkNHNlBwVFNrSlEv
+            UlMzK0p1d1lCU05qV21VQmlDYjFtSVFhSVNNCjNlNTRZRXpZS3VNMGsvOG82OXdr
+            dm03NEJuVkwwYmg4RzNucVFoTzZUQjQKLS0tIGpTZFQ0TjBaNWtCazVzbmdKR1BV
+            cW81WmhHeVI3Z2ZYKzh6YVNBczVzUjAKOPlsPz+uPFjhlXY2yk8qsgVVaKP4w5Ka
+            BgN7EKtF0HViVnsRCG/57WsNeCHYKr2a8zYVaONsI6Ez8rRABl2kPw==
             -----END AGE ENCRYPTED FILE-----
           recipient: age1q8u7ap4warcxem7dr6wtre2xqfx65j0jqdxq9dvwl0lm7kap3f4qp3fqxe
     encrypted_regex: ^(webhook_url|adminPassword)$
-    lastmodified: "2026-06-27T16:32:59Z"
-    mac: ENC[AES256_GCM,data:DrxeMfoHW0cLVm76XNBcnG4phM+EecLX3tjWBrOTrBFM2Aa4O+L7pBlnv5sIYOPxrpEeYP9BZYciORraLhPgjw+0oVa31Pixx2jsbMmsOZM9E1yLNhbCp4rb2tVm1FLWeRavfC7ykCowc2WGm4xUCoeFodpIcbnMF95d0wPG7Q8=,iv:iE1SSDM4lUF+k+sk37wKoxGiyTvxI8y+eoCNN6y7Z3c=,tag:/U++BfXshV3s9eWQJGxA+w==,type:str]
-    version: 3.13.1
+    lastmodified: "2026-10-19T22:17:55Z"
+    mac: ENC[AES256_GCM,data:3IHpznUuWLTqBcE4RpjOsFljvvCvaz9cmx/XPSI9ildVqpdqW0DD6AOXTWX6BF5Pmwm44aeW38/ADMn8IHeUZHICrcZCY21uYG8FnaY9OHFki6a8jvmpr6k2PHz+ONlGVZ9Gi/GGEbuL0ALS1I28ctRHZ3uoCDlCUURtKEDDQlg=,iv:KWwumeCw76IC8ew27ZbnVZPMV0uHjzXJaqNHngZdodc=,tag:Rxttmzn/t+iAqhJo/VL27g==,type:str]
+    version: 3.13.3
