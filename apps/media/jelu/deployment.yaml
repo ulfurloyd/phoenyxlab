@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: jelu
-          image: wabayang/jelu:0.88.2
+          image: wabayang/jelu:0.88.4
           env:
             - name: TZ
               value: "Asia/Kolkata"
