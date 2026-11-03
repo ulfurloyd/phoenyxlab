@@ -1,0 +1,234 @@
+#+title: phoenyxlab
+
+Personal GitOps-managed homelab running on Kubernetes
+
+* Overview
+Phoenyxlab is my self-hosted platform for media, infrastructure, monitoring, automation, and experimentation. What began as a way to learn Kubernetes has evolved into the primary operating environment for my home network.
+The cluster is managed declaratively using FluxCD and GitOps principles: Git is the single source of truth and Flux continuously reconciles desired state.
+
+* Philosophy
+The primary goals of this project are:
+- Learn Kubernetes by operating real workloads
+- Maintain a fully declarative infrastructure
+- Minimize manual cluster changes
+- Ensure services are reproducible and recoverable
+- Treat infrastructure as software
+In practice this means:
+- Kubernetes manifests live in Git
+- FluxCD continuously reconciles cluster state
+- Secrets are encrypted using SOPS + age
+- Application data lives on PVCs
+- Backups are performed automatically
+- Upgrades are proposed automatically through Renov ate
+
+* Architecture
+
+#+begin_quote
+Git
+ │
+ ▼
+FluxCD
+ │
+ ├── infrastructure
+ │   ├── traefik
+ │   ├── cert-manager
+ │   ├── monitoring
+ │   └── backup
+ │
+ └── applications
+     ├── infra
+     ├── media
+     ├── downloads
+     └── monitoring
+#+end_quote
+
+* Repo Structure
+#+begin_quote
+.
+├── apps/
+│   ├── downloads/
+│   ├── infra/
+│   ├── media/
+│   └── monitoring/
+│
+├── infrastructure/
+│   ├── backup/
+│   ├── cert-manager/
+│   ├── monitoring/
+│   ├── network-policies/
+│   └── traefik/
+│
+├── clusters/
+│   └── phoenyxlab/
+│
+└── docs/
+#+end_quote
+
+** Applications
+Application manifests follow a resource-oriented layout:
+#+begin_quote
+application/
+├── deployment.yaml
+├── service.yaml
+├── ingress.yaml
+├── pvc.yaml
+├── secret.yaml
+└── kustomization.yaml
+#+end_quote
+
+Applications requiring supporting services keep those resources alongside the application:
+#+begin_quote
+pinepods/
+├── postgres-deployment.yaml
+├── postgres-service.yaml
+├── valkey-deployment.yaml
+├── deployment.yaml
+└── ...
+#+end_quote
+
+* Cluster Infrastructure
+** Networking
+- Traefik ingress controller
+- Wildcard TLS certificate via cert-manager
+- Pi-hole for internal DNS
+- Private access via Tailscale
+- NetworkPolicies: default-deny ingress, explicit allow rules by namespace
+
+** GitOps
+- FluxCD reconciliation
+- Flux alerts to Discord
+- SOPS + age encrypted secrets
+- Renovate automated dependency updates
+
+** Monitoring
+- kube-prometheus-stack
+- prometheus
+- grafana
+- alertmanager
+- node-exporter
+- glances
+- speedtest-tracker
+- uptime-kuma (external)
+  
+** Backup
+- Restic cronjobs
+- Encrypted backups
+- Cloudflare R2 backups
+- Monthly retention policies
+
+** Namespaces
+#+begin_quote
++---------------+-----------------------------------+
+| namespace     | purpose                           |
++---------------+-----------------------------------+
+| infra         | core self-hosted infrastructure   |
+| media         | media management and consumption  |
+| downloads     | acquisition pipeline              |
+| monitoring    | cluster and host observability    |
+| cert-manager  | TLS certificate management        |
+| backup        | backup infrastructure             |
++---------------+-----------------------------------+
+#+end_quote
+
+** Service Inventory
+*** Self-hosted Applications
+|-------------------+------------+---------------------|
+| hostname          | namespace  | description         |
+|-------------------+------------+---------------------|
+| homarr            | infra      | dashboard           |
+| homepage          | infra      | dashboard           |
+| notifiarr         | infra      | notification relay  |
+| pi-hole           | infra      | DNS and adblock     |
+| vaultwarden       | infra      | password manager    |
+| freshrss          | media      | RSS Reader          |
+| jellyfin          | media      | media server        |
+| jelu              | media      | book library        |
+| lidarr            | media      | music acquisition   |
+| navidrome         | media      | music server        |
+| pinepods          | media      | podcast server      |
+| radarr            | media      | movie management    |
+| seerr             | media      | media requests      |
+| droppedneedle     | media      | music requests      |
+| sonarr            | media      | tv management       |
+| soulsync          | media      | music syncing       |
+| jackett           | downloads  | indexer management  |
+| prowlarr          | downloads  | indexer management  |
+| qbittorrent       | downloads  | torrent client      |
+| slskd             | downloads  | soulseek client     |
+| glances           | monitoring | system stats        |
+| speedtest-tracker | monitoring | network speed tests |
+|-------------------+------------+---------------------|
+
+*** Cluster Infrastructure
+|--------------------+----------------------------|
+| component          | purpose                    |
+|--------------------+----------------------------|
+| traefik            | ingress controller         |
+| FluxCD             | GitOps                     |
+| cert-manager       | TLS certificate management |
+| prometheus         | metrics collection         |
+| grafana            | dashboards                 |
+| alertmanager       | alert routing              |
+| node-exporter      | host metrics               |
+| kube-state-metrics | kubernetes metrics         |
+| restic             | backups                    |
+| SOPS + age         | secret management          |
+| renovate           | dependency updates         |
+|--------------------+----------------------------|
+
+*** External Services
+|----------------------+----------------------------|
+| service              | purpose                    |
+|----------------------+----------------------------|
+| uptime kuma (OCI VM) | external uptime monitoring |
+| cloudflare R2        | backup storage             |
+| GoDaddy DNS          | authoritative DNS          |
+| Tailscale            | private remote access      |
+|----------------------+----------------------------|
+
+** Media Automation
+#+begin_example
+Request
+   │
+   ▼
+Seerr / Droppedneedle
+   │
+   ▼
+Sonarr / Radarr / Lidarr
+   │
+   ▼
+Prowlarr
+   │
+   ▼
+qBittorrent / slskd
+   │
+   ▼
+Import → Organize → Cleanup
+   │
+   ▼
+Jellyfin / Navidrome
+#+end_example
+
+** Validation and Automation
+- kubeconform validates manifests
+- container image tags are verified in CI
+- Renovate tracks images and Helm charts
+- Flux continuously reconciles desired state
+- Deployment failures generate Discord alerts
+
+** Backup and Recovery
+The cluster is designed around recoverability.
+- Declarative state exists in Git
+- Secrets exist as ~sops~ encrypted manifests
+- Application data exists on PVCs
+- Persistent data is backed up using Restic
+- Storage uses =Retain= reclaim policies where appropriate
+
+Cluster recovery consists of:
+
+1. Install k3s
+2. Install FluxCD
+3. Restore the ~sops~ age key
+4. Bootstrap Flux
+5. Allow Flux to reconcile infrastructure and applications
+6. Restore PVC data if necessary
