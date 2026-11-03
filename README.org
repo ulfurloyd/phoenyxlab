@@ -23,7 +23,7 @@ In practice this means:
 
 * Architecture
 
-#+begin_quote
+#+begin_example
 Git
  │
  ▼
@@ -40,10 +40,10 @@ FluxCD
      ├── media
      ├── downloads
      └── monitoring
-#+end_quote
+#+end_example
 
 * Repo Structure
-#+begin_quote
+#+begin_example
 .
 ├── apps/
 │   ├── downloads/
@@ -62,11 +62,11 @@ FluxCD
 │   └── phoenyxlab/
 │
 └── docs/
-#+end_quote
+#+end_example
 
 ** Applications
 Application manifests follow a resource-oriented layout:
-#+begin_quote
+#+begin_example
 application/
 ├── deployment.yaml
 ├── service.yaml
@@ -74,17 +74,17 @@ application/
 ├── pvc.yaml
 ├── secret.yaml
 └── kustomization.yaml
-#+end_quote
+#+end_example
 
 Applications requiring supporting services keep those resources alongside the application:
-#+begin_quote
+#+begin_example
 pinepods/
 ├── postgres-deployment.yaml
 ├── postgres-service.yaml
 ├── valkey-deployment.yaml
 ├── deployment.yaml
 └── ...
-#+end_quote
+#+end_example
 
 * Cluster Infrastructure
 ** Networking
@@ -117,18 +117,16 @@ pinepods/
 - Monthly retention policies
 
 ** Namespaces
-#+begin_quote
-+---------------+-----------------------------------+
-| namespace     | purpose                           |
-+---------------+-----------------------------------+
-| infra         | core self-hosted infrastructure   |
-| media         | media management and consumption  |
-| downloads     | acquisition pipeline              |
-| monitoring    | cluster and host observability    |
-| cert-manager  | TLS certificate management        |
-| backup        | backup infrastructure             |
-+---------------+-----------------------------------+
-#+end_quote
+|--------------+----------------------------------|
+| namespace    | purpose                          |
+|--------------+----------------------------------|
+| infra        | core self-hosted infrastructure  |
+| media        | media management and consumption |
+| downloads    | acquisition pipeline             |
+| monitoring   | cluster and host observability   |
+| cert-manager | TLS certificate management       |
+| backup       | backup infrastructure            |
+|--------------+----------------------------------|
 
 ** Service Inventory
 *** Self-hosted Applications
