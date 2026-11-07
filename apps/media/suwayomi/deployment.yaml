@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: suwayomi
-          image: ghcr.io/suwayomi/suwayomi-server:v2.4.2476
+          image: ghcr.io/suwayomi/suwayomi-server:v2.4.2490
           env:
             - name: TZ
               value: Asia/Kolkata
